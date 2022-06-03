@@ -22,6 +22,7 @@
         if (!empty($arg_textoabuscar)) {
             $statement->bindParam(':arg_textoabuscar' , $arg_textoabuscar);  // reemplazo los parametros enlazados 
         }
+        
         $statement->bindParam(':arg_fechabuscar' , $arg_fechabuscar);  // reemplazo los parametros enlazados 
     
 
