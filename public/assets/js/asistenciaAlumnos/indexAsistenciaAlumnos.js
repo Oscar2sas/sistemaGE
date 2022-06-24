@@ -22,8 +22,9 @@ $(document).ready(function() {
 	});
 
 	$('#trayectos').change(function(){
-
+        
 		buscarCurso();
+
 	});
 	// Obtener id de los check de asistencia
 
@@ -143,7 +144,8 @@ $(document).ready(function() {
         data.append('datosEstadoSituacionDia', JSON.stringify(argDatosParamentros));
 
         // Especifico hacia que controlador quiero enviar mi peticion
-        const URL = 'sistema/controladores/asistenciaalumnos/controller.asistenciaalumnos.php';
+        const URL = window.location.pathname;
+        console.log(URL);
         // Especifico la configuracion de mi peticion y tambien los datos a enviar
         const CONFIG = {
             method: 'POST',
@@ -234,11 +236,13 @@ const buscarCurso = ()=>{
 		// Se guarda los datos para la busqueda del curso ingresado por el usuario
 		// y se le especifica el metodo para el controlador
 		data.append('accion', 'verificar_horarios_curso');
-
 		data.append('datosHorarios', JSON.stringify(datosParamentros));
 		
+        const carpeta = window.location.pathname.substring(0,window.location.pathname.indexOf("controladores")-1)
+
 		// Especifico hacia que controlador quiero enviar mi peticion
-		const URL = 'sistema/controladores/asistenciaalumnos/controller.asistenciaalumnos.php';
+		const URL = carpeta + "/controladores/asistenciaalumnos/controller.asistenciaalumnos.php";
+        console.log(URL);
         // Especifico la configuracion de mi peticion y tambien los datos a enviar
         const CONFIG = {
         	method: 'POST',
@@ -246,12 +250,13 @@ const buscarCurso = ()=>{
         };
 
         // Realizo la peticion
-
         try {
         	// Seccion verificar si la fecha es valida para la asistencia
         	const resultPeticionAsistencia = await fetch(URL, CONFIG);
         	const resultVerificacionAsistencia = await resultPeticionAsistencia.json();
-        	// console.log(resultVerificacionAsistencia)
+
+        	console.log(resultVerificacionAsistencia);
+
         	if (!resultVerificacionAsistencia) {
         		$('#error').append(`
         			<h3 class="text-dark">
@@ -277,7 +282,8 @@ const buscarCurso = ()=>{
         	const resultPeticionAlumnos = await fetch(URL, CONFIG);
         	const resultBusquedaAlumnos = await resultPeticionAlumnos.json();
 
-            // console.log(resultBusquedaAlumnos)
+            console.log();
+
             // if (resultBusquedaAlumnos == 'tomar_asistencia_curso') {
             //     $('#error').append(`
             //         <h3 class="text-dark">

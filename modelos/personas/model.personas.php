@@ -10,18 +10,18 @@
 
         $sql = "SELECT *,telefonos.cnumero_telefono,telefonos.ntipo_telefono, sexos.cdescripcion_sexo FROM personas left join sexos on personas.rela_sexo_id = sexos.sexo_id left join telefonos on telefonos.rela_persona_id = personas.persona_id"; // busca todas las personas
 
-        if (!empty($arg_textoabuscar)) {
+        /*if (!empty($arg_textoabuscar)) {
         
-            $sql = $sql." WHERE capellidos_persona LIKE :arg_textoabuscar OR cnombres_persona LIKE :arg_textoabuscar";   // filtra busqueda 
+            $sql = $sql." WHERE capellidos_persona LIKE ':arg_textoabuscar' OR cnombres_persona LIKE :arg_textoabuscar";   // filtra busqueda 
 
             $arg_textoabuscar="%".TRIM($arg_textoabuscar)."%";
-        }
+        }*/
 
         $sql = $sql." ORDER BY cnombres_persona";  
         
         $statement = $conexion->prepare($sql);
         
-        $statement->bindParam(':arg_textoabuscar' , $arg_textoabuscar);  // reemplazo los parametros enlazados 
+        /*$statement->bindParam(':arg_textoabuscar' , $arg_textoabuscar);*/  // reemplazo los parametros enlazados 
         
         
         if(!$statement){

@@ -1,5 +1,26 @@
 <?php 
 
+  function obtenerAnolectivo($argAnoLectivo){
+
+    $db = new ConexionDB;
+		$conexion = $db->retornar_conexion();
+
+    $sqlAnoLectivo = "SELECT ndescripcion_anolectivo FROM anos_lectivos where anolectivo_id = $argAnoLectivo;";
+
+    $statement = $conexion->prepare($sqlAnoLectivo);
+
+    $statement->execute();
+
+    while($resultado = $statement->fetch(PDO::FETCH_ASSOC)){
+      $result = $resultado;
+    }
+
+    $statement = $db->cerrar_conexion($conexion);
+
+    return $result;
+
+  }
+
 // ========================================================================================
 // VERIFICAR HORARIOS PARA PODER REALIZAR LA ASISTENCIA
 // NOTA: EL USUARIO NO DEBERIA PODER REALIZAR LA ASISTENCIA DE UN CURSO QUE NO TIENE CLASES ESE DIA
@@ -94,23 +115,24 @@ function buscar_Inasistencia_Alumnos($argFechaAsistencia, $argIdAnoLectivo, $arg
 
 		FROM divisiones_inasistencias d1, alumnos a1, personas p1, estado_alumnos e1, cursos c1
 
-        WHERE d1.rela_anolectivo_id = :argrela_anolectivo_id AND d1.rela_trayecto_id = :argrela_trayecto_id AND d1.rela_alumno_id = a1.alumno_id AND d1.dfecha_inasistencia = :argdfecha_inasistencia AND d1.rela_curso_id = c1.curso_id AND c1.curso_id = :argrela_curso_id AND a1.rela_persona_id = p1.persona_id AND a1.rela_estadoalumno_id = e1.estadoalumno_id AND (e1.cdescripcion_estadoalumno = 'CURSANTE' OR e1.cdescripcion_estadoalumno = 'REPITENTE' OR e1.cdescripcion_estadoalumno = 'LIBRE')"; // busca las inasistencias que coincidad con esa fecha
+        WHERE d1.rela_anolectivo_id = $argIdAnoLectivo AND d1.rela_trayecto_id = $argIdTrayectos AND d1.rela_alumno_id = a1.alumno_id AND d1.rela_curso_id = c1.curso_id AND c1.curso_id = $argIdCurso AND a1.rela_persona_id = p1.persona_id AND a1.rela_estadoalumno_id = e1.estadoalumno_id AND nsituacion_alumno != 2"; // busca las inasistencias que coincidad con esa fecha
 
         $statement = $conexion->prepare($sql_inasistencia_alumnos);
 
-        $statement->bindParam(':argrela_anolectivo_id' , $argIdAnoLectivo);  // reemplazo los parametros enlazados 
+       /* $statement->bindParam(':argrela_anolectivo_id' , $argIdAnoLectivo);  // reemplazo los parametros enlazados 
 
-		$statement->bindParam(':argrela_trayecto_id' , $argIdTrayectos);  // reemplazo los parametros enlazados 
+		    $statement->bindParam(':argrela_trayecto_id' , $argIdTrayectos);  // reemplazo los parametros enlazados 
 		
-		$statement->bindParam(':argdfecha_inasistencia' , $argFechaAsistencia);  // reemplazo los parametros enlazados 
+    		$statement->bindParam(':argdfecha_inasistencia' , $argFechaAsistencia);  // reemplazo los parametros enlazados 
 
-        $statement->bindParam(':argrela_curso_id' , $argIdCurso);  // reemplazo los parametros enlazados 
+        $statement->bindParam(':argrela_curso_id' , $argIdCurso);  // reemplazo los parametros enlazados */
 
         $statement->execute();
 
         
         if (!$statement){
-            // no se encontraron paises
+            echo "No se encontraron resultados";
+            return ;
         }else{
             // reviso el retorno
         	while($resultado = $statement->fetch(PDO::FETCH_ASSOC)){
@@ -120,7 +142,7 @@ function buscar_Inasistencia_Alumnos($argFechaAsistencia, $argIdAnoLectivo, $arg
         // cierro la conexion
         $statement = $db->cerrar_conexion($conexion);
         
-        // $resultado_Tabla_Asistencia_Alumnos = armar_Tabla_Asistencia_Alumnos($argDivision_alumnos, $resultado_inasistencia_alumnos, $argFechaAsistencia, $argIdAnoLectivo, $argIdTrayectos, $argIdCurso);
+        //$resultado_Tabla_Asistencia_Alumnos = armar_Tabla_Asistencia_Alumnos($argDivision_alumnos, $resultado_inasistencia_alumnos, $argFechaAsistencia, $argIdAnoLectivo, $argIdTrayectos, $argIdCurso);
 
         return $resultado_inasistencia_alumnos;
         
@@ -178,8 +200,6 @@ function buscar_Inasistencia_Alumnos($argFechaAsistencia, $argIdAnoLectivo, $arg
     // Funcion para armar la estructura de la tabla
       function armar_Tabla_Asistencia_Alumnos($arg_result_division_alumnos, $arg_resultado_inasistencia_alumnos, $argFechaAsistencia, $argIdAnoLectivo, $argIdTrayectos, $argIdCurso){
 
-    	// var_dump($arg_resultado_inasistencia_alumnos);
-
        $db = new ConexionDB;
        $conexion = $db->retornar_conexion();
         // Cabecera tabla asistencia alumnos
@@ -207,39 +227,38 @@ function buscar_Inasistencia_Alumnos($argFechaAsistencia, $argIdAnoLectivo, $arg
        <tbody>";
 
         // CUERPO TABLA
-
        foreach ($arg_result_division_alumnos as $key => $division_alumnos) {
 
             // obtener total valor de la inasistencia de un alumno
         $cantInasistenciaAlumno = obtener_Total_Valor_Inasistencia_Alumnos($argIdAnoLectivo, $division_alumnos['alumno_id'], $argIdTrayectos, $argIdCurso);
             // obtener total valor de la tardanza de un alumno
             // var_dump($division_alumnos);
-        $cantTardanzaAlumno = obtener_Total_Valor_Tardanza_Alumnos($argIdAnoLectivo, $division_alumnos['alumno_id'], $argIdTrayectos, $argIdCurso);
+        //$cantTardanzaAlumno = obtener_Total_Valor_Tardanza_Alumnos($argIdAnoLectivo, $division_alumnos['alumno_id'], $argIdTrayectos, $argIdCurso);
 
-        $cantInasistenciaAlumno += $cantTardanzaAlumno;
+        //$cantInasistenciaAlumno += $cantTardanzaAlumno;
 
             // obtener valor de los parametros del sistema
-        $resultParametros = obtener_valores_parametros();
+        //$resultParametros = obtener_valores_parametros();
 
             // verificar el estado del alumno
-        $estadoAlumno = ($cantInasistenciaAlumno > $resultParametros['nmaximo_inasitencias']) ? true : false;
+        //$estadoAlumno = ($cantInasistenciaAlumno > $resultParametros['nmaximo_inasitencias']) ? true : false;
 
             // se elige clase de css segun la cantidad de faltas obtenidas 
-        $colorClase = ($estadoAlumno) ? 'bg-warning' : 'bg-success';
+        //$colorClase = ($estadoAlumno) ? 'bg-warning' : 'bg-success';
 
 
-        if ($cantInasistenciaAlumno >= $resultParametros['nvalor_reincorporacion'] || $division_alumnos['cdescripcion_estadoalumno'] == "REINCORPORAR") {
+        // if ($cantInasistenciaAlumno >= $resultParametros['nvalor_reincorporacion'] || $division_alumnos['cdescripcion_estadoalumno'] == "REINCORPORAR") {
 
-          modificar_estado_alumno($division_alumnos['alumno_id'], '10', '1');
+        //   modificar_estado_alumno($division_alumnos['alumno_id'], '10', '1');
 
-          $propCheck = 'disabled';
+        //   $propCheck = 'disabled';
 
-          $colorClase = 'bg-danger';            
+           $colorClase = 'bg-danger';            
 
-        }else{
+        // }else{
 
-          $propCheck = '';
-        }
+           $propCheck = '';
+        // }
             // se elige la estado de los check segun las faltas obtenidas
 
         $tabla_asistencia_alumnos.= "<tr class='".$colorClase."'>
@@ -259,7 +278,6 @@ function buscar_Inasistencia_Alumnos($argFechaAsistencia, $argIdAnoLectivo, $arg
 
     			// Consulto la asistencia de un alumno en el dia segun el trayecto
          $tabla_asistencia_alumnos.= verificar_Asistencia_Alumnos($arg_resultado_inasistencia_alumnos, $division_alumnos['alumno_id'], $propCheck);
-
     			// Consulto si esta justificada la inasistencia si es que falto
          $tabla_asistencia_alumnos .= verificar_Justificacion_Inasistencia_Alumno($arg_resultado_inasistencia_alumnos, $division_alumnos['alumno_id'], $propCheck);
     			// Consulto si tiene tardanza el alumno
@@ -276,6 +294,7 @@ function buscar_Inasistencia_Alumnos($argFechaAsistencia, $argIdAnoLectivo, $arg
 
      }
      $tabla_asistencia_alumnos .= "</tbody></table><br>";
+
      $tabla_asistencia_alumnos .= obtener_Preceptor_Division_Alumnos($argIdCurso, $argIdTrayectos);
 
      $tabla_asistencia_alumnos .= "<input type='button' name='guardarInasistencia' id='guardarInasistencia' class='float-right btn btn-success' value='Guardar Inasistencias'>";
@@ -327,7 +346,7 @@ function buscar_Inasistencia_Alumnos($argFechaAsistencia, $argIdAnoLectivo, $arg
    $conexion = $db->retornar_conexion();
 
    $sql_inasistencias_alumnos_trayectos = "
-   SELECT * FROM divisiones_inasistencias d1, alumnos a1, personas p1, estado_alumnos e1 WHERE d1.rela_anolectivo_id = :argrela_anolectivo_id AND d1.rela_trayecto_id = :argrela_trayecto_id AND d1.rela_alumno_id = a1.alumno_id AND a1.rela_persona_id = p1.persona_id AND a1.rela_estadoalumno_id = e1.estadoalumno_id AND (e1.cdescripcion_estadoalumno = 'CURSANTE' OR e1.cdescripcion_estadoalumno = 'REPITENTE' OR e1.cdescripcion_estadoalumno = 'LIBRE' OR e1.cdescripcion_estadoalumno = 'REINCORPORAR') AND d1.btardanza_asistencia = 0 AND a1.alumno_id = :alumno_id
+   SELECT * FROM divisiones_inasistencias d1, alumnos a1, personas p1, estado_alumnos e1 WHERE d1.rela_anolectivo_id = :argrela_anolectivo_id AND d1.rela_trayecto_id = :argrela_trayecto_id AND d1.rela_alumno_id = a1.alumno_id AND a1.rela_persona_id = p1.persona_id AND a1.rela_estadoalumno_id = e1.estadoalumno_id AND a1.alumno_id = :alumno_id
    ";
 
    $statement = $conexion->prepare($sql_inasistencias_alumnos_trayectos);
@@ -351,7 +370,7 @@ function buscar_Inasistencia_Alumnos($argFechaAsistencia, $argIdAnoLectivo, $arg
         $checkAsistencia="";
         foreach ($arg_resultado_inasistencia_alumnos as $key => $inasistencia_alumnos) {
 
-         if ($inasistencia_alumnos['rela_alumno_id'] == $argIdAlumno && $inasistencia_alumnos['btardanza_asistencia'] == 0) {
+         if ($inasistencia_alumnos['rela_alumno_id'] == $argIdAlumno) {
 
           $checkAsistencia .= "<td class='text-center'><input type='checkbox' class='form-check-input' id='checkInasistencia' ".$arg_PropCheck." value=".$argIdAlumno."></td>"; 
         }
@@ -543,7 +562,7 @@ function buscar_Inasistencia_Alumnos($argFechaAsistencia, $argIdAnoLectivo, $arg
 
 		// 2
 		$total_inasistencia_alumno = count(obtener_Total_Inasistencia_Alumnos($argIdAnoLectivo, $argIdAlumno, $argIdTrayectos));
-		
+
 		$total_inasistencia_alumno_justificado = obtener_Total_Inasistencias_Justificadas_Alumnos($argIdAnoLectivo, $argIdCurso, $argIdTrayectos, $argIdAlumno);
 
 		// return $total_inasistencia_alumno - $total_inasistencia_alumno_justificado;
@@ -745,15 +764,14 @@ function buscar_Inasistencia_Alumnos($argFechaAsistencia, $argIdAnoLectivo, $arg
     $conexion = $db->retornar_conexion();
 
     $sql_total_valor_inasistencia_alumno = "
-    SELECT SUM(d2.nvalor_inasistencia) AS 'valor_total_inasistencia' FROM divisiones_inasistencias d1, divisiones_horarios_materias d2 WHERE d1.dfecha_inasistencia = d2.dfecha_horario AND d1.binasistencia_justificada = 0 AND d1.btardanza_asistencia = 0 AND d1.rela_anolectivo_id = :argrela_anolectivo_id AND d1.rela_curso_id = :argrela_curso_id AND d1.rela_trayecto_id = :argrela_trayecto_id AND d1.rela_alumno_id = :argrela_alumno_id";
+    SELECT SUM(d2.nvalor_inasistencia) AS 'valor_total_inasistencia' FROM divisiones_inasistencias d1, divisiones_horarios_materias d2 WHERE d1.dfecha_inasistencia = d2.dfecha_horario AND d1.binasistencia_justificada = 0 AND d1.rela_anolectivo_id = $argIdAnoLectivo AND d1.rela_curso_id = $argIdCurso AND d1.rela_trayecto_id = $argIdTrayectos AND d1.rela_alumno_id = $argIdAlumno";
 
     $statement = $conexion->prepare($sql_total_valor_inasistencia_alumno);
 
-            $statement->bindParam(':argrela_alumno_id' , $argIdAlumno);  // reemplazo los parametros enlazados 
+            /*$statement->bindParam(':argrela_alumno_id' , $argIdAlumno);  // reemplazo los parametros enlazados 
             $statement->bindParam(':argrela_trayecto_id' , $argIdTrayectos);  // reemplazo los parametros enlazados 
             $statement->bindParam(':argrela_anolectivo_id' , $argIdAnoLectivo);  // reemplazo los parametros enlazados 
-            $statement->bindParam(':argrela_curso_id' , $argIdCurso);  // reemplazo los parametros enlazados 
-
+            $statement->bindParam(':argrela_curso_id' , $argIdCurso);  // reemplazo los parametros enlazados */
             $statement->execute();
             $resultado = $statement->fetch(PDO::FETCH_ASSOC);
             

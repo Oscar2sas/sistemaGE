@@ -8,7 +8,7 @@ include ($absolute_include."vistas/plantillas/tabHeadAsistencias.php");
 
 ?> 
 
-
+<form action=<?php echo $absolute_include."controladores/asistenciaalumnos/controller.controller.asistenciaalumnos.php"?> method="post">
 
 <div id="contenedorForm" class="col-md-12 col-sm-12 col-xs-12">
 
@@ -19,7 +19,7 @@ include ($absolute_include."vistas/plantillas/tabHeadAsistencias.php");
     
     <div class="form-group">
         <label for="situacionDelDia">Seleccione Situacion del Dia</label>
-        <select class="form-control" id="situacionDelDia">
+        <select class="form-control" id="situacionDelDia" name="situacionDelDia">
           <option value="1">Dia Normal</option>
           <option value="2">Dia Anormal</option>
       </select>
@@ -27,7 +27,7 @@ include ($absolute_include."vistas/plantillas/tabHeadAsistencias.php");
 
   <div class="form-group">
     <label for="cicloLectivo">Seleccione Año Lectivo</label>
-    <select class="form-control" id="cicloLectivo">
+    <select class="form-control" id="cicloLectivo" name="cicloLectivo">
       <option value="<?php echo $resultAnoLectivoActivo['anolectivo_id']; ?>" selected><?php echo $resultAnoLectivoActivo['ndescripcion_anolectivo']; ?></option>
   </select>
 </div>
@@ -49,7 +49,7 @@ include ($absolute_include."vistas/plantillas/tabHeadAsistencias.php");
 
 <div class="form-group">
     <label for="trayectos">Seleccione el Trayecto</label>
-    <select class="form-control" id="trayectos">
+    <select class="form-control" id="trayectos" name="trayectos">
       <option selected disabled value="0">Elija un Trayecto:</option>
         <?php foreach ($trayectos as $rowTrayectos): ?>
             <option value="<?php echo $rowTrayectos['trayecto_id'] ?>"><?php echo $rowTrayectos['cdescripcion_trayecto']; ?></option>
@@ -64,7 +64,8 @@ include ($absolute_include."vistas/plantillas/tabHeadAsistencias.php");
 
 
 </div>
-
+<input type="submit" value="holanda" name="ayuda">
+</form>
 
 <?php 
 
