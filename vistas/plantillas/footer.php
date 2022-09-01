@@ -39,11 +39,11 @@
   <script src="<?php echo $carpeta_trabajo;?>/public/assets/js/anosLectivos/indexAnosLectivos.js"></script> 
   <script src="<?php echo $carpeta_trabajo;?>/public/assets/plugins/sweetalert2.js"></script> 
   <script src="<?php echo $carpeta_trabajo;?>/public/assets/js/fechaCalendarios/indexFechaCalendarios.js"></script> 
-  <script src="<?php  echo $carpeta_trabajo;?>/public/assets/js/asistenciaAlumnos/indexAsistenciaAlumnos.js"></script> -->
+  <script src="<?php  echo $carpeta_trabajo;?>/public/assets/js/asistenciaAlumnos/indexAsistenciaAlumnos.js"></script>
   <!-- <script src="<?php// echo $carpeta_trabajo;?>/public/assets/js/asistenciaDocentes/indexAsistenciaDocentes.js"></script> -->
    <!-- <script src="<?php// echo $carpeta_trabajo;?>/public/assets/js/historialAlumnos/indexHistorialAlumnos.js"></script> -->
   <!-- <script src="<?php// echo $carpeta_trabajo;?>/public/assets/js/notificacionesAlumnos/indexNotificacionesAlumnos.js"></script> -->
-  <!-- <script src="<?php// echo $carpeta_trabajo;?>/public/assets/js/justificacionesAlumnos/indexJustificacionesAlumnos.js"></script> -->
+  <script src="<?php// echo $carpeta_trabajo;?>/public/assets/js/justificacionesAlumnos/indexJustificacionesAlumnos.js"></script>
   <script src="<?php echo $carpeta_trabajo;?>/public/assets/js/movimientosDivisiones/indexMovimientosDivisiones.js"></script> 
   <script src="<?php echo $carpeta_trabajo;?>/public/assets/js/movimientosAlumnos/indexMovimientosAlumnos.js"></script> 
   <script src="<?php echo $carpeta_trabajo;?>/public/assets/js/reincorporacionesAlumnos/indexReincorporacionesAlumnos.js"></script> 

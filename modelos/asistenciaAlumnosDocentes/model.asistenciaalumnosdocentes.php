@@ -228,23 +228,23 @@ function modificar_inasistencia_alumnos_docentes($arg_id_ano_lectivo, $arg_alumn
 }
 
 // obtener el porcentaje de asistencia de un alumno
-function obtener_porcentaje_inasistencia_alumno_docentes($argIdAnoLectivo, $argIdMateria, $argIdCurso, $argIdTrayectos, $argIdAlumno){
+function obtener_porcentaje_inasistencia_alumno_docentes($argIdAnoLectivo, $argIdMateria, $argIdCurso, $argIdTrayectos, $argIdAlumno,$cantInasitenciaDisponible){
 
 		// 100%
-	$total_asistencia_docentes = obtener_asistencias_docentes($argIdAnoLectivo, $argIdMateria, $argIdTrayectos, $argIdCurso);
+	//$total_asistencia_docentes = obtener_asistencias_docentes($argIdAnoLectivo, $argIdMateria, $argIdTrayectos, $argIdCurso);
 
 
 		// 2
 	$total_inasistencia_alumno = count(obtener_Total_Inasistencia_Alumnos_Docentes($argIdAnoLectivo, $argIdAlumno, $argIdMateria, $argIdTrayectos, $argIdCurso));
 
 
-	$total_asistencia_docentes = $total_asistencia_docentes['mensaje'][0]['tota_asistencia_docente'];		
+	//$total_asistencia_docentes = $total_asistencia_docentes['mensaje'][0]['tota_asistencia_docente'];	
+	$total_asistencia_docentes = 0;	
 
 	if ($total_inasistencia_alumno > 0) {
 
-		$result_asistencia_alumno = $total_inasistencia_alumno/$total_asistencia_docentes;
+		$result_asistencia_alumno = $total_asistencia_alumno*100/$cantInasitenciaDisponible;
 
-		$result_asistencia_alumno = $result_asistencia_alumno * 100;
 
 	}else{	
 
@@ -347,8 +347,7 @@ function obtener_Total_Inasistencia_Alumnos_Docentes($argIdAnoLectivo, $argIdAlu
 	$conexion = $db->retornar_conexion();
 
 	$sql_inasistencias_alumnos_docentes = "
-	SELECT * FROM inasistencia_alumno_docentes a1 WHERE a1.rela_anolectivo_id = :rela_anolectivo_id AND a1.rela_alumno_id = :argrela_alumno_id AND a1.rela_docente_id = :argrela_docente_id AND a1.rela_materia_id = :argrela_materia_id AND a1.rela_trayecto_id = :argrela_trayecto_id AND a1.rela_curso_id = :argrela_curso_id
-	";
+	SELECT COUNT(rela_alumno_id) FROM divisiones_inasistencias a1 WHERE a1.rela_anolectivo_id = :rela_anolectivo_id AND a1.rela_alumno_id = :argrela_alumno_id AND a1.rela_trayecto_id = :argrela_trayecto_id AND a1.rela_curso_id = :argrela_curso_id GROUP BY rela_alumno_id";
 
 	$statement = $conexion->prepare($sql_inasistencias_alumnos_docentes);
 

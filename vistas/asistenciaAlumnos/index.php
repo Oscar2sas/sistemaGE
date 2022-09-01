@@ -8,8 +8,6 @@ include ($absolute_include."vistas/plantillas/tabHeadAsistencias.php");
 
 ?> 
 
-<form action=<?php echo $absolute_include."controladores/asistenciaalumnos/controller.controller.asistenciaalumnos.php"?> method="post">
-
 <div id="contenedorForm" class="col-md-12 col-sm-12 col-xs-12">
 
     <!-- Titulos de la pantalla -->
@@ -64,8 +62,6 @@ include ($absolute_include."vistas/plantillas/tabHeadAsistencias.php");
 
 
 </div>
-<input type="submit" value="holanda" name="ayuda">
-</form>
 
 <?php 
 

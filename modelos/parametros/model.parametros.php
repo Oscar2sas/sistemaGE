@@ -214,5 +214,37 @@
         $statement = $db->cerrar_conexion($conexion);
 
     }
+
+    function obtener_valores_parametros(){
+
+        $parametros = array();  // creo un array que va a almacenar la informacion de los paises
+
+        $db = new ConexionDB;
+        $conexion = $db->retornar_conexion();
+
+        $sql = "SELECT * FROM parametros "; // busca todos loa paises
+        
+        $statement = $conexion->query($sql);
+
+        if (!$statement) {
+            // no se encontraron paises
+        }
+        else {
+        
+            // reviso el retorno
+
+            while($resultado = $statement->fetch(PDO::FETCH_ASSOC)){
+
+                $parametros[] = $resultado;
+
+            }
+        }
+
+        // cierro la conexion
+        $statement = $db->cerrar_conexion($conexion);
+
+        return $parametros[0];
+
+    }
     
 ?> 

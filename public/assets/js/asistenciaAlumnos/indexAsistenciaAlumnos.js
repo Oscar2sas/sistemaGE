@@ -53,6 +53,8 @@ $(document).ready(function() {
             idTrayectos,
             token
         };
+        console.log(datosParamentros);
+        return;
         if (idAsistenciasAlumnos == '' && idAlumnosAsistenciaTardanza == '') {
             mostrarMensajeAlerta('Debe Modificar Alguna Asistencia, Verifique');
         }else{
@@ -144,8 +146,11 @@ $(document).ready(function() {
         data.append('datosEstadoSituacionDia', JSON.stringify(argDatosParamentros));
 
         // Especifico hacia que controlador quiero enviar mi peticion
-        const URL = window.location.pathname;
-        console.log(URL);
+        const carpeta = window.location.pathname.substring(0,window.location.pathname.indexOf("controladores")-1);
+
+		// Especifico hacia que controlador quiero enviar mi peticion
+		const URL = carpeta + "/controladores/asistenciaalumnos/controller.asistenciaalumnos.php";
+
         // Especifico la configuracion de mi peticion y tambien los datos a enviar
         const CONFIG = {
             method: 'POST',
@@ -157,7 +162,7 @@ $(document).ready(function() {
             // Seccion guardar la asistencia de los alumnos
             const resultPeticionGuardadoAsistenciaAlumnos = await fetch(URL, CONFIG);
             const resultDatosGuardadoAsistenciaAlumnos = await resultPeticionGuardadoAsistenciaAlumnos.json();
-            // console.log(resultDatosGuardadoAsistenciaAlumnos)
+            console.log(resultDatosGuardadoAsistenciaAlumnos)
             mostrarMensajeAlerta(resultDatosGuardadoAsistenciaAlumnos);
         } catch (e) {
             console.log(e);
@@ -237,12 +242,12 @@ const buscarCurso = ()=>{
 		// y se le especifica el metodo para el controlador
 		data.append('accion', 'verificar_horarios_curso');
 		data.append('datosHorarios', JSON.stringify(datosParamentros));
+
 		
-        const carpeta = window.location.pathname.substring(0,window.location.pathname.indexOf("controladores")-1)
+        const carpeta = window.location.pathname.substring(0,window.location.pathname.indexOf("controladores")-1);
 
 		// Especifico hacia que controlador quiero enviar mi peticion
 		const URL = carpeta + "/controladores/asistenciaalumnos/controller.asistenciaalumnos.php";
-        console.log(URL);
         // Especifico la configuracion de mi peticion y tambien los datos a enviar
         const CONFIG = {
         	method: 'POST',
@@ -255,7 +260,6 @@ const buscarCurso = ()=>{
         	const resultPeticionAsistencia = await fetch(URL, CONFIG);
         	const resultVerificacionAsistencia = await resultPeticionAsistencia.json();
 
-        	console.log(resultVerificacionAsistencia);
 
         	if (!resultVerificacionAsistencia) {
         		$('#error').append(`
@@ -280,20 +284,19 @@ const buscarCurso = ()=>{
         	// Reseteo la accion para buscar a los alumnos del curso
         	data.set('accion', 'obtener_alumnos_curso');
         	const resultPeticionAlumnos = await fetch(URL, CONFIG);
-        	const resultBusquedaAlumnos = await resultPeticionAlumnos.json();
+            const resultBusquedaAlumnos = await resultPeticionAlumnos.json();
 
-            console.log();
-
-            // if (resultBusquedaAlumnos == 'tomar_asistencia_curso') {
+            // if (resultBusquedaAlumnos == 'No existe aun la divisiòn, verifique') {
             //     $('#error').append(`
             //         <h3 class="text-dark">
             //         <b>
-            //         Debe realizar la <a href="sistemaProfesionalizantes/controladores/asistenciadocente/controller.asistenciadocente.php">asistencia</a> del curso primero, por favor verifique!
+            //         sas
             //         </b>
             //         </h3>
             //         `);
             //     return;
             // }
+
             $('#contenedorForm').append(resultBusquedaAlumnos);
         	// Inicializacion de datatable
 
@@ -365,7 +368,7 @@ $("#contenedorForm").on("click", "#exportarParteDiarioAlumnos", function(){
         descCurso
     };
     const caracteristicas = "height=700,width=800,scrollTo,resizable=1,scrollbars=1,location=0";
-    window.open(`sistemaProfesionalizantes/controladores/asistenciaalumnos/controller.asistenciaalumnos.php?accion=imprimir_parte_diario&parametros_parte_diario=${JSON.stringify(datosParamentrosParteDiario)}`, 'Popup', caracteristicas);
+    window.open(`sistema/controladores/asistenciaalumnos/controller.asistenciaalumnos.php?accion=imprimir_parte_diario&parametros_parte_diario=${JSON.stringify(datosParamentrosParteDiario)}`, 'Popup', caracteristicas);
     return false;
 });
 });

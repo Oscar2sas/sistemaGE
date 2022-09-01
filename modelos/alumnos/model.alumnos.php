@@ -10,7 +10,7 @@
         $db = new ConexionDB;
         $conexion = $db->retornar_conexion();
 
-        $sql_division_alumnos = "SELECT * FROM divisiones_alumnos d1, alumnos a1, personas p1, estado_alumnos e1 WHERE d1.rela_alumno_id = a1.alumno_id AND a1.rela_persona_id = p1.persona_id AND a1.rela_estadoalumno_id = e1.estadoalumno_id AND a1.nsituacion_alumno != 2  AND d1.rela_curso_id = $argIdCurso"; // busca todos los anos lectivos
+        $sql_division_alumnos = "SELECT * FROM divisiones_alumnos d1, alumnos a1, personas p1, estado_alumnos e1 WHERE d1.rela_alumno_id = a1.alumno_id AND a1.rela_persona_id = p1.persona_id AND a1.rela_estadoalumno_id = e1.estadoalumno_id AND a1.nsituacion_alumno != 2  AND d1.rela_curso_id = $argIdCurso AND d1.rela_anolectivo_id = $argIdAnoLectivo"; // busca todos los anos lectivos
 
         $statement = $conexion->prepare($sql_division_alumnos);
         

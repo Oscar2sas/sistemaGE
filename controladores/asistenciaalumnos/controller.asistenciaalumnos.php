@@ -75,6 +75,42 @@ if (strpos($_SERVER["PHP_SELF"] , $seccion_trabajo) >1 ) {
   if ( $accion == "" OR $accion=="index" )  {
 
     // Se llama a la funcion para mostrara el listado de alumnos para la asistencia
+    // $InasistenciaAlumno = obtener_Total_Valor_Inasistencia_Alumnos(3, 1, 1, 1);
+    // var_dump($InasistenciaAlumno);
+    // echo "<br>";
+    // $cantInasistenciaAlumno = $InasistenciaAlumno['valor_total_inasistencia'];
+    // $cantTardanzaAlumno = $InasistenciaAlumno['valor_total_tardanza'];
+    // die();
+    
+    //se llama a la funcion para armar la tabla
+    // $resultado_division_alumnos = buscar_division_alumnos(3, 1);
+    // $resultado_inasistencias_alumnos = buscar_Inasistencia_Alumnos('2022-08-19', 3, 1, 1);
+    // var_dump($resultado_inasistencias_alumnos);
+    // echo "<br>";
+
+    // $tabla_pueba = armar_Tabla_Asistencia_Alumnos($resultado_division_alumnos,$resultado_inasistencias_alumnos,'2022-08-19',3,1,1);
+    
+    // echo $tabla_pueba;
+    // die(); 
+
+    
+
+    // guardar_Asistencia_Alumnos() "cee8ff345149485f53ee367a529523e43e78d9e82759f0fbba8ebfd2c67e38d6"
+    // $idSituacionDia = 1;
+    // $idAnoLectivo = 3;
+    // $fechaAsistencia = "2022-09-01";
+    // $idCursos = 1;
+    // $idTrayectos = 1;
+    // $token = "cee8ff345149485f53ee367a529523e43e78d9e82759f0fbba8ebfd2c67e38d6";
+
+    // $cosas = [$idSituacionDia,$idAnoLectivo,$fechaAsistencia,$idCursos,$idTrayectos,$token];
+
+    // $paramentrosIdAlumnosAsistencia = [0,1];
+    // $paramentrosDatosIdAlumnosTardanza = [0];
+
+    // guardar_Asistencia_Alumnos($paramentrosIdAlumnosAsistencia,$cosas,$paramentrosDatosIdAlumnosTardanza);
+    // die();
+
     alumno_asistencia_index();
   }elseif ($accion == "verificar_horarios_curso") {
 
@@ -215,20 +251,32 @@ if (strpos($_SERVER["PHP_SELF"] , $seccion_trabajo) >1 ) {
 
     // Decodificacion de los parametros enviados
     // datos del formulario
-    $argParamentrosFormularioAsistenciaAlumnos = json_decode($argParamentrosFormularioAsistenciaAlumnos);
+    // $argParamentrosFormularioAsistenciaAlumnos = json_decode($argParamentrosFormularioAsistenciaAlumnos);
 
-    $idSituacionDia = $argParamentrosFormularioAsistenciaAlumnos->idSituacionDia;
-    $idAnoLectivo = $argParamentrosFormularioAsistenciaAlumnos->idAnoLectivo;
-    $fechaAsistencia = $argParamentrosFormularioAsistenciaAlumnos->fechaAsistencia;
-    $idCursos = $argParamentrosFormularioAsistenciaAlumnos->idCursos;
-    $idTrayectos = $argParamentrosFormularioAsistenciaAlumnos->idTrayectos;
-    $token = $argParamentrosFormularioAsistenciaAlumnos->token;
+    // $idSituacionDia = $argParamentrosFormularioAsistenciaAlumnos->idSituacionDia;
+    // $idAnoLectivo = $argParamentrosFormularioAsistenciaAlumnos->idAnoLectivo;
+    // $fechaAsistencia = $argParamentrosFormularioAsistenciaAlumnos->fechaAsistencia;
+    // $idCursos = $argParamentrosFormularioAsistenciaAlumnos->idCursos;
+    // $idTrayectos = $argParamentrosFormularioAsistenciaAlumnos->idTrayectos;
+    // $token = $argParamentrosFormularioAsistenciaAlumnos->token;
 
-    // datos de los alumnos
-    $idAlumnosAsistencia = json_decode($argParamentrosIdAlumnosAsistencia);
+    // // datos de los alumnos
+    // $idAlumnosAsistencia = json_decode($argParamentrosIdAlumnosAsistencia);
 
-    // datos de las tardanzas a los alumnos
-    $idAlumnosTardanza = json_decode($argParamentrosDatosIdAlumnosTardanza);
+    // // datos de las tardanzas a los alumnos
+    // $idAlumnosTardanza = json_decode($argParamentrosDatosIdAlumnosTardanza);
+
+    $idSituacionDia = $argParamentrosFormularioAsistenciaAlumnos[0];
+    $idAnoLectivo = $argParamentrosFormularioAsistenciaAlumnos[1];
+    $fechaAsistencia = $argParamentrosFormularioAsistenciaAlumnos[2];
+    $idCursos = $argParamentrosFormularioAsistenciaAlumnos[3];
+    $idTrayectos = $argParamentrosFormularioAsistenciaAlumnos[4];
+    $token = $argParamentrosFormularioAsistenciaAlumnos[5];
+
+    $idAlumnosAsistencia = $argParamentrosIdAlumnosAsistencia;
+
+    $idAlumnosTardanza = $argParamentrosDatosIdAlumnosTardanza;
+
     
 
     if ($token == $_SESSION['token']) {
@@ -236,10 +284,9 @@ if (strpos($_SERVER["PHP_SELF"] , $seccion_trabajo) >1 ) {
 
       $resultOperacionAsistenciaAlumnos = false;
 
-      for ($i=0; $i <count($idAlumnosAsistencia); $i++) { 
+      for ($i=0; $i < count($idAlumnosAsistencia); $i++) {
 
-
-        $resultBusquedaInasistenciaAlumnos = buscar_Inasistencia_Alumnos($fechaAsistencia, $idAnoLectivo, $idTrayectos, $idCursos);
+        $resultBusquedaInasistenciaAlumnos = inasistencia_de_hoy($fechaAsistencia);
 
         $situacionDelDia = ($idSituacionDia == 1) ? 0 : 1;
 
@@ -332,14 +379,11 @@ if (strpos($_SERVER["PHP_SELF"] , $seccion_trabajo) >1 ) {
 
   $parametros_parte_diario = json_decode($parametros_parte_diario);
 
-  $idAnoLectivo = $parametros_parte_diario->idAnoLectivo;
   $fechaAsistencia = $parametros_parte_diario->fechaAsistencia;
-  $idCursos = $parametros_parte_diario->idCursos;
-  $idTrayectos = $parametros_parte_diario->idTrayectos;
 
   $descTrayecto = $parametros_parte_diario->descTrayecto;
   $descCurso = $parametros_parte_diario->descCurso;
 
-  $resultInasistenciaAlumnos = buscar_Inasistencia_Alumnos($fechaAsistencia, $idAnoLectivo, $idTrayectos, $idCursos);
+  $resultInasistenciaAlumnos = inasistencia_de_hoy($fechaAsistencia);
   include ($absolute_include."vistas/asistenciaAlumnos/imprimirParteDiarioAlumnos.php"); 
 }

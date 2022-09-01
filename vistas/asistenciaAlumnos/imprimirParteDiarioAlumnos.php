@@ -1,6 +1,5 @@
 <?php
   include ($absolute_include."vistas/plantillas/head_imprimir.php");   
-// var_dump($resultInasistenciaAlumnos);
 ?>
 
      
