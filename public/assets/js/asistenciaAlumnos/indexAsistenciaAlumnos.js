@@ -53,13 +53,9 @@ $(document).ready(function() {
             idTrayectos,
             token
         };
-        console.log(datosParamentros);
-        return;
-        if (idAsistenciasAlumnos == '' && idAlumnosAsistenciaTardanza == '') {
-            mostrarMensajeAlerta('Debe Modificar Alguna Asistencia, Verifique');
-        }else{
-            guardarDatosInasistenciaAlumnos(idAsistenciasAlumnos, datosParamentros, idAlumnosAsistenciaTardanza);
-        }
+        console.log(datosParamentros,idAsistenciasAlumnos,idAlumnosAsistenciaTardanza);
+        guardarDatosInasistenciaAlumnos(idAsistenciasAlumnos, datosParamentros, idAlumnosAsistenciaTardanza);
+
     });
 
 
@@ -76,10 +72,10 @@ $(document).ready(function() {
           inputCheck.prop('disabled', true).prop('checked', false);
 
           idAlumnosAsistenciaTardanza.splice(idAlumnosAsistenciaTardanza.indexOf(inputCheck.val()), 1);
-         // console.log(idAlumnosAsistenciaTardanza)
+         //console.log(idAlumnosAsistenciaTardanza)
      }else{
       $(this).closest('tr').find('#checkAsistenciaTardanza').prop('disabled', false); 
-         // console.log(idAlumnosAsistenciaTardanza)
+         //console.log(idAlumnosAsistenciaTardanza)
 
      } 
 
@@ -91,7 +87,7 @@ $(document).ready(function() {
             
         }
         
-        // console.log(idAsistenciasAlumnos)
+        //console.log(idAsistenciasAlumnos)
     });
 
     // ====================================================================================
@@ -368,7 +364,8 @@ $("#contenedorForm").on("click", "#exportarParteDiarioAlumnos", function(){
         descCurso
     };
     const caracteristicas = "height=700,width=800,scrollTo,resizable=1,scrollbars=1,location=0";
-    window.open(`sistema/controladores/asistenciaalumnos/controller.asistenciaalumnos.php?accion=imprimir_parte_diario&parametros_parte_diario=${JSON.stringify(datosParamentrosParteDiario)}`, 'Popup', caracteristicas);
+    const carpeta = window.location.pathname.substring(0,window.location.pathname.indexOf("controladores")-1);
+    window.open(carpeta+`/controladores/asistenciaalumnos/controller.asistenciaalumnos.php?accion=imprimir_parte_diario&parametros_parte_diario=${JSON.stringify(datosParamentrosParteDiario)}`, 'Popup', caracteristicas);
     return false;
 });
 });

@@ -98,7 +98,7 @@ if (strpos($_SERVER["PHP_SELF"] , $seccion_trabajo) >1 ) {
     // guardar_Asistencia_Alumnos() "cee8ff345149485f53ee367a529523e43e78d9e82759f0fbba8ebfd2c67e38d6"
     // $idSituacionDia = 1;
     // $idAnoLectivo = 3;
-    // $fechaAsistencia = "2022-09-01";
+    // $fechaAsistencia = "2022-09-02";
     // $idCursos = 1;
     // $idTrayectos = 1;
     // $token = "cee8ff345149485f53ee367a529523e43e78d9e82759f0fbba8ebfd2c67e38d6";
@@ -251,31 +251,31 @@ if (strpos($_SERVER["PHP_SELF"] , $seccion_trabajo) >1 ) {
 
     // Decodificacion de los parametros enviados
     // datos del formulario
-    // $argParamentrosFormularioAsistenciaAlumnos = json_decode($argParamentrosFormularioAsistenciaAlumnos);
+    $argParamentrosFormularioAsistenciaAlumnos = json_decode($argParamentrosFormularioAsistenciaAlumnos);
 
-    // $idSituacionDia = $argParamentrosFormularioAsistenciaAlumnos->idSituacionDia;
-    // $idAnoLectivo = $argParamentrosFormularioAsistenciaAlumnos->idAnoLectivo;
-    // $fechaAsistencia = $argParamentrosFormularioAsistenciaAlumnos->fechaAsistencia;
-    // $idCursos = $argParamentrosFormularioAsistenciaAlumnos->idCursos;
-    // $idTrayectos = $argParamentrosFormularioAsistenciaAlumnos->idTrayectos;
-    // $token = $argParamentrosFormularioAsistenciaAlumnos->token;
+    $idSituacionDia = $argParamentrosFormularioAsistenciaAlumnos->idSituacionDia;
+    $idAnoLectivo = $argParamentrosFormularioAsistenciaAlumnos->idAnoLectivo;
+    $fechaAsistencia = $argParamentrosFormularioAsistenciaAlumnos->fechaAsistencia;
+    $idCursos = $argParamentrosFormularioAsistenciaAlumnos->idCursos;
+    $idTrayectos = $argParamentrosFormularioAsistenciaAlumnos->idTrayectos;
+    $token = $argParamentrosFormularioAsistenciaAlumnos->token;
 
     // // datos de los alumnos
-    // $idAlumnosAsistencia = json_decode($argParamentrosIdAlumnosAsistencia);
+    $idAlumnosAsistencia = json_decode($argParamentrosIdAlumnosAsistencia);
 
     // // datos de las tardanzas a los alumnos
-    // $idAlumnosTardanza = json_decode($argParamentrosDatosIdAlumnosTardanza);
+    $idAlumnosTardanza = json_decode($argParamentrosDatosIdAlumnosTardanza);
 
-    $idSituacionDia = $argParamentrosFormularioAsistenciaAlumnos[0];
-    $idAnoLectivo = $argParamentrosFormularioAsistenciaAlumnos[1];
-    $fechaAsistencia = $argParamentrosFormularioAsistenciaAlumnos[2];
-    $idCursos = $argParamentrosFormularioAsistenciaAlumnos[3];
-    $idTrayectos = $argParamentrosFormularioAsistenciaAlumnos[4];
-    $token = $argParamentrosFormularioAsistenciaAlumnos[5];
+    // $idSituacionDia = $argParamentrosFormularioAsistenciaAlumnos[0];
+    // $idAnoLectivo = $argParamentrosFormularioAsistenciaAlumnos[1];
+    // $fechaAsistencia = $argParamentrosFormularioAsistenciaAlumnos[2];
+    // $idCursos = $argParamentrosFormularioAsistenciaAlumnos[3];
+    // $idTrayectos = $argParamentrosFormularioAsistenciaAlumnos[4];
+    // $token = $argParamentrosFormularioAsistenciaAlumnos[5];
 
-    $idAlumnosAsistencia = $argParamentrosIdAlumnosAsistencia;
+    // $idAlumnosAsistencia = $argParamentrosIdAlumnosAsistencia;
 
-    $idAlumnosTardanza = $argParamentrosDatosIdAlumnosTardanza;
+    // $idAlumnosTardanza = $argParamentrosDatosIdAlumnosTardanza;
 
     
 
@@ -284,7 +284,7 @@ if (strpos($_SERVER["PHP_SELF"] , $seccion_trabajo) >1 ) {
 
       $resultOperacionAsistenciaAlumnos = false;
 
-      for ($i=0; $i < count($idAlumnosAsistencia); $i++) {
+      foreach ($idAlumnosAsistencia as $idInas) {
 
         $resultBusquedaInasistenciaAlumnos = inasistencia_de_hoy($fechaAsistencia);
 
@@ -292,53 +292,29 @@ if (strpos($_SERVER["PHP_SELF"] , $seccion_trabajo) >1 ) {
 
         if (!empty($resultBusquedaInasistenciaAlumnos)) {
 
-          $resultComparacionInasistencia = comparar_inasistencia_alumno($resultBusquedaInasistenciaAlumnos, $idAlumnosAsistencia[$i]);
+          $resultComparacionInasistencia = comparar_inasistencia_alumno($resultBusquedaInasistenciaAlumnos, $idInas);
+
 
           if ($resultComparacionInasistencia) {
             // ELIMINAR LA INASISTENCIA DEL ALUMNO
-
-            $resultModificacionAsistenciaAlumnos = modificar_Asistencia_Alumnos($fechaAsistencia, $situacionDelDia, $idAnoLectivo, $idCursos, $idTrayectos, $idAlumnosAsistencia[$i]);
-
-            $resultOperacionAsistenciaAlumnos = ($resultModificacionAsistenciaAlumnos == true) ? 'Inasistencias Borradas Correctamente' : 'Error Inasistencias Borrar';
+            foreach ($idAlumnosTardanza as $idTar) {
+              $resultModificacionAsistenciaAlumnos = modificar_Asistencia_Alumnos($fechaAsistencia, $situacionDelDia, $idAnoLectivo, $idCursos, $idTrayectos, $idTar);
+            }
+            $resultOperacionAsistenciaAlumnos = ($resultModificacionAsistenciaAlumnos == true) ? 'Tardansas exitosamentes registradas' : 'Error al Registrar la Tardansa';
 
           }else{
             // INSERTAR INASISTENCIA ALUMNO SI SE MODIFICO
-            $resultGuardadoAsistenciaAlumnos = insertar_Asistencia_Alumnos($fechaAsistencia, $situacionDelDia, $idAnoLectivo, $idCursos, $idTrayectos, $idAlumnosAsistencia[$i]);
+            $resultGuardadoAsistenciaAlumnos = insertar_Asistencia_Alumnos($fechaAsistencia, $situacionDelDia, $idAnoLectivo, $idCursos, $idTrayectos, $idInas);
 
-            $resultOperacionAsistenciaAlumnos = ($resultGuardadoAsistenciaAlumnos == true) ? 'Inasistencias Editadas Correctamente' : 'Error Inasistencias Edtitar';
+            $resultOperacionAsistenciaAlumnos = ($resultGuardadoAsistenciaAlumnos == true) ? 'Inasistencias exitosamentes registradas' : 'Error al Insertar Inasistencias';
           }
 
         }else{
           // INSERTAR LA INASISTENCIA A TODOS LO ALUMNOS (SI ES LA PRIMERA VEZ EN EL DIA)
-          $resultGuardadoAsistenciaAlumnos = insertar_Asistencia_Alumnos($fechaAsistencia, $situacionDelDia, $idAnoLectivo, $idCursos, $idTrayectos, $idAlumnosAsistencia[$i]);
+          $resultGuardadoAsistenciaAlumnos = insertar_Asistencia_Alumnos($fechaAsistencia, $situacionDelDia, $idAnoLectivo, $idCursos, $idTrayectos, $idInas);
 
-          $resultOperacionAsistenciaAlumnos = ($resultGuardadoAsistenciaAlumnos == true) ? 'Inasistencias Registradas Correctamente' : 'Error Inasistencias Registrar';
+          $resultOperacionAsistenciaAlumnos = ($resultGuardadoAsistenciaAlumnos == true) ? 'Inasistencias exitosamentes registradas' : 'Error al Insertar Inasistencias';
         }
-      }
-
-
-      if (!empty($idAlumnosTardanza)) {
-        $resultBusquedaTardanzasAlumnos = buscar_Tardanzas_Alumnos($fechaAsistencia, $idAnoLectivo, $idTrayectos, $idCursos);
-
-        for ($i=0; $i < count($idAlumnosTardanza) ; $i++) { 
-
-        // echo json_encode($idAlumnosTardanza[$i]);
-
-          $resultComparacionTardanza = comparar_tardanza_alumno($resultBusquedaTardanzasAlumnos, $idAlumnosTardanza[$i]);
-
-          if ($resultComparacionTardanza) {
-
-            $resultModificacionTardanzasAlumnos = modificar_Tardanza_Asistencia_Alumnos($fechaAsistencia, $idAnoLectivo, $idCursos, $idTrayectos, $idAlumnosTardanza[$i]);
-
-            $resultOperacionAsistenciaAlumnos = ($resultModificacionTardanzasAlumnos == true) ? 'Tardanzas Borradas Correctamente' : 'Error Tardanzas Borrar';
-          }else{
-
-            $resultInsertTardanzaAlumno = insertar_Tardanza_Asistencia_Alumnos($fechaAsistencia, $idAnoLectivo, $idCursos, $idTrayectos, $idAlumnosTardanza[$i]);
-
-            $resultOperacionAsistenciaAlumnos = ($resultInsertTardanzaAlumno == true) ? 'Tardanzas Registradas Correctamente' : 'Error Inasistencias Tardanzas';
-
-          }
-        } 
       }
       echo json_encode($resultOperacionAsistenciaAlumnos);
 

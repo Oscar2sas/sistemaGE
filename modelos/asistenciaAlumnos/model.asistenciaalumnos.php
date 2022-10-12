@@ -628,63 +628,48 @@ function buscar_Inasistencia_Alumnos($argFechaAsistencia, $argIdAnoLectivo, $arg
 // insertar la inasistencia de un alumno
 	function insertar_Asistencia_Alumnos($argFechaAsistencia, $argJustificacionSituacionDia, $argIdAnoLectivo, $argIdCursos, $argIdTrayectos, $argIdAlumnosAsistencia){
 
-		try {
 
-			$db = new ConexionDB;
+    $db = new ConexionDB;
 
-			$conexion = $db->retornar_conexion();
+    $conexion = $db->retornar_conexion()`'
 
-      $sql_asistencia_alumnos = "INSERT INTO divisiones_inasistencias(dfecha_inasistencia, binasistencia_justificada, rela_anolectivo_id, rela_curso_id, rela_trayecto_id, rela_alumno_id, rela_documentos_personas_id) VALUES ('$argFechaAsistencia', $argJustificacionSituacionDia, $argIdAnoLectivo, $argIdCursos, $argIdTrayectos, $argIdAlumnosAsistencia, 1)";
+    $sql_asistencia_alumnos = "INSERT INTO divisiones_inasistencias(dfecha_inasistencia, binasistencia_justificada, rela_anolectivo_id, rela_curso_id, rela_trayecto_id, rela_alumno_id, rela_documentos_personas_id) VALUES ('$argFechaAsistencia', $argJustificacionSituacionDia, $argIdAnoLectivo, $argIdCursos, $argIdTrayectos, $argIdAlumnosAsistencia, 1)";
 
-			$statement = $conexion->prepare($sql_asistencia_alumnos);
+    $statement = $conexion->prepare($sql_asistencia_alumnos);
 
-			$statement->bindParam(':argdfecha_inasistencia' , $argFechaAsistencia);  // reemplazo los parametros enlazados 
-			$statement->bindParam(':argbinasistencia_justificada' , $argJustificacionSituacionDia);  // reemplazo los parametros enlazados 
-			$statement->bindParam(':argrela_anolectivo_id' , $argIdAnoLectivo);  // reemplazo los parametros enlazados 
-			$statement->bindParam(':argrela_curso_id' , $argIdCursos);  // reemplazo los parametros enlazados 
-			$statement->bindParam(':argrela_trayecto_id' , $argIdTrayectos);  // reemplazo los parametros enlazados 
-			$statement->bindParam(':argrela_alumno_id' , $argIdAlumnosAsistencia);  // reemplazo los parametros enlazados 
-
-			// if (!$statement->execute()) {
-			// 	return($statement->errorInfo());
-			// }
-			// return true;
-
-		} catch (PDOException $e) {
-			echo "Mensaje de la excepción: ".$e->getMessage()."<br>";
-			return false;
-		}
+    // $statement->bindParam(':argdfecha_inasistencia' , $argFechaAsistencia);  // reemplazo los parametros enlazados 
+    // $statement->bindParam(':argbinasistencia_justificada' , $argJustificacionSituacionDia);  // reemplazo los parametros enlazados 
+    // $statement->bindParam(':argrela_anolectivo_id' , $argIdAnoLectivo);  // reemplazo los parametros enlazados 
+    // $statement->bindParam(':argrela_curso_id' , $argIdCursos);  // reemplazo los parametros enlazados 
+    // $statement->bindParam(':argrela_trayecto_id' , $argIdTrayectos);  // reemplazo los parametros enlazados 
+    // $statement->bindParam(':argrela_alumno_id' , $argIdAlumnosAsistencia);  // reemplazo los parametros enlazados 
+    $statement->execute();
+    return true;
 	}
 
 // modificar la inasistencia de un alumno
 	function modificar_Asistencia_Alumnos($argFechaAsistencia, $argJustificacionSituacionDia, $argIdAnoLectivo, $argIdCursos, $argIdTrayectos, $argIdAlumnosAsistencia){
 
-		try {
+    $db = new ConexionDB;
 
-			$db = new ConexionDB;
+    $conexion = $db->retornar_conexion();
 
-			$conexion = $db->retornar_conexion();
+    $sql_asistencia_alumnos = "UPDATE `divisiones_inasistencias` SET btardanza_asistencia = 1 WHERE dfecha_inasistencia = '$argFechaAsistencia' AND rela_alumno_id = $argIdAlumnosAsistencia;
+    ";
 
-			$sql_asistencia_alumnos = "DELETE FROM divisiones_inasistencias WHERE dfecha_inasistencia = :argdfecha_inasistencia AND rela_anolectivo_id = :argrela_anolectivo_id AND rela_curso_id = :argrela_curso_id AND rela_trayecto_id = :argrela_trayecto_id AND rela_alumno_id = :argrela_alumno_id";
+    $statement = $conexion->prepare($sql_asistencia_alumnos);
 
-			$statement = $conexion->prepare($sql_asistencia_alumnos);
+    // $statement->bindParam(':argdfecha_inasistencia' , $argFechaAsistencia);  // reemplazo los parametros enlazados 
+    // $statement->bindParam(':argbinasistencia_justificada' , $argJustificacionSituacionDia);  // reemplazo los parametros enlazados 
+    // $statement->bindParam(':argrela_anolectivo_id' , $argIdAnoLectivo);  // reemplazo los parametros enlazados 
+    // $statement->bindParam(':argrela_curso_id' , $argIdCursos);  // reemplazo los parametros enlazados 
+    // $statement->bindParam(':argrela_trayecto_id' , $argIdTrayectos);  // reemplazo los parametros enlazados 
+    // $statement->bindParam(':argrela_alumno_id' , $argIdAlumnosAsistencia);  // reemplazo los parametros enlazados 
+    $statement->execute();
 
-			$statement->bindParam(':argdfecha_inasistencia' , $argFechaAsistencia);  // reemplazo los parametros enlazados 
-			$statement->bindParam(':argbinasistencia_justificada' , $argJustificacionSituacionDia);  // reemplazo los parametros enlazados 
-			$statement->bindParam(':argrela_anolectivo_id' , $argIdAnoLectivo);  // reemplazo los parametros enlazados 
-			$statement->bindParam(':argrela_curso_id' , $argIdCursos);  // reemplazo los parametros enlazados 
-			$statement->bindParam(':argrela_trayecto_id' , $argIdTrayectos);  // reemplazo los parametros enlazados 
-			$statement->bindParam(':argrela_alumno_id' , $argIdAlumnosAsistencia);  // reemplazo los parametros enlazados 
+    $statement = $db->cerrar_conexion($conexion);
 
-			if (!$statement->execute()) {
-				return($statement->errorInfo());
-			}
-			return true;
-
-		} catch (PDOException $e) {
-			return "Mensaje de la excepción: ".$e->getMessage()."<br>";
-			// return false;
-		}
+    return true;
 	}
 
 

@@ -60,6 +60,7 @@
     // llamo a una funcion en el modelo de usuarios
     
     $resultados = login_usuario( $usuario, $password );   
+    
  
   
     if (!$resultados) {
@@ -126,8 +127,8 @@
     $session_id = session_id();
     $token = hash('sha256', $hora.$session_id);
  
-    // $_SESSION['token'] = $token;
-    $_SESSION['token'] = "cee8ff345149485f53ee367a529523e43e78d9e82759f0fbba8ebfd2c67e38d6";
+    $_SESSION['token'] = $token;
+    // $_SESSION['token'] = "cee8ff345149485f53ee367a529523e43e78d9e82759f0fbba8ebfd2c67e38d6";
 
     // llamo a la funcion en el modelo para grabar el log
 
