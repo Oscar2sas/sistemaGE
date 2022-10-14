@@ -631,7 +631,7 @@ function buscar_Inasistencia_Alumnos($argFechaAsistencia, $argIdAnoLectivo, $arg
 
     $db = new ConexionDB;
 
-    $conexion = $db->retornar_conexion()`'
+    $conexion = $db->retornar_conexion();
 
     $sql_asistencia_alumnos = "INSERT INTO divisiones_inasistencias(dfecha_inasistencia, binasistencia_justificada, rela_anolectivo_id, rela_curso_id, rela_trayecto_id, rela_alumno_id, rela_documentos_personas_id) VALUES ('$argFechaAsistencia', $argJustificacionSituacionDia, $argIdAnoLectivo, $argIdCursos, $argIdTrayectos, $argIdAlumnosAsistencia, 1)";
 
